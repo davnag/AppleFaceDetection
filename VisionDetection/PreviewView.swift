@@ -16,7 +16,9 @@ class PreviewView: UIView {
     
     // MARK: AV capture properties
     var videoPreviewLayer: AVCaptureVideoPreviewLayer {
-        return layer as! AVCaptureVideoPreviewLayer
+        let videoLayer = layer as! AVCaptureVideoPreviewLayer
+        videoLayer.videoGravity = .resizeAspectFill
+        return videoLayer
     }
     
     var session: AVCaptureSession? {
@@ -50,10 +52,12 @@ class PreviewView: UIView {
     }
     
     func drawFaceboundingBox(face : VNFaceObservation) {
+
+        let size = frame.size
         
-        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -frame.height)
+        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -size.height)
         
-        let translate = CGAffineTransform.identity.scaledBy(x: frame.width, y: frame.height)
+        let translate = CGAffineTransform.identity.scaledBy(x: size.width, y: size.height)
         
         // The coordinates are normalized to the dimensions of the processed image, with the origin at the image's lower-left corner.
         let facebounds = face.boundingBox.applying(translate).applying(transform)
